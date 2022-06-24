@@ -1,24 +1,50 @@
-import "./App.css";
+//React 
+import React, { useState, useRef, useContext } from "react";
+
+//CSS and animation
 import { Container, Box } from "@mui/system";
-import React, { useState, useRef } from "react";
+import "./App.css";
 import { useDrag } from "react-use-gesture";
-// import { useSprings, animated, interpolate } from "react-spring";
-//import { useSpring } from "@use-gesture/react";
 import { animated } from "react-spring";
-//import SliderImage from "./components/slider";
 import SliderN from "./components/ArrowsControl";
 
+//Context API
+import NoteContext from "./context/context";
+
+//Speed Calculation variables
 var endDate;
 var startDate;
+
+
 function App() {
-  const [selectedPerson, setSelectedPerson] = useState({
-    name: "Shahbaz Sharief",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/CM_Punjab_Shehbaz_Sharif_%2835771008313%29_%28cropped%29.jpg/220px-CM_Punjab_Shehbaz_Sharif_%2835771008313%29_%28cropped%29.jpg",
-    afterHitAvatar: "./images/shahbaz_sharif_2.png",
-  });
-  const [count, setCount] = useState(0);
+
+  //using Context to accesss Data 
+  const score = useContext(NoteContext);
+  // console.log(score.state.map((data) => { return Object.values(data.count) }))
+  // const num = (index) => {
+  //   // score.setTarget(score.state[index])
+  //   console.log(index)
+  // }
+
+  // const num = score.state.map((data, index) => {
+  //   // return data.count
+  //   console.log("index", data.count[index])
+  // })
+  //console.log(score.state[0].count)
+
+
+
+  // const [selectedPerson, setSelectedPerson] = useState({
+  //   name: "Shahbaz Sharief",
+  //   image:
+  //     "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/CM_Punjab_Shehbaz_Sharif_%2835771008313%29_%28cropped%29.jpg/220px-CM_Punjab_Shehbaz_Sharif_%2835771008313%29_%28cropped%29.jpg",
+  //   afterHitAvatar: "./images/shahbaz_sharif_2.png",
+  // });
+
+
+  //const [count, setCount] = useState(0);
   const [LogoPos, setLogoPos] = useState({ x: 0, y: 0 });
+
   //const [imagePosition, setImagePosition] = useState({ x: 0, y: 0 });
   // const [imageDimensions, setImageDimensions] = useState({
   //   width: 0,
@@ -28,112 +54,65 @@ function App() {
   // const [divDimensions, setdivDimensions] = useState({ width: 0, height: 0 });
   const [lastSpeed, setLastSpeed] = useState(0);
   const [hitDetected, setHitDetected] = useState(false);
-  // useEffect(() => {
-  //   setLastSpeed({});
 
-  // });
-
-  // useEffect(() => {
-  //   setdivDimensions({
-  //     width: refContainer.current.offsetWidth,
-  //     height: refContainer.current.offsetheight,
-  //   });
-  //   console.log(
-  //     "divdimensionWidth",
-  //     refContainer.current.offsetWidth,
-  //     "divdimensionHeight",
-  //     refContainer.current.offsetHeight
-  //   );
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log("Selected person changed! ", selectedPerson);
-  // }, [selectedPerson].id);
-  //  console.log("divdimension", refContainer.current.width);
-  // const bind = useDrag(({ active, movement: [mx], cancel }) => {
-  //   if (mx > 200) cancel()
-
-  // const bind = useDrag(
-  //   (api, { down, offset: [ox] }) =>
-  //     api.start({
-  //       imagePosition: down ? ox : 0,
-  //       config: { duration: 3000 },
-  //     }),
-  //   { from: () => [imagePosition.get(), 0] }
-  // );
-  //return <animated.div {...bind()} style={{ x }} />
   const mov = useDrag((params) => {
-    console.log(params);
-    if (LogoPos.x > avatarRef.current.x - avatarRef.current.width - 50) {
-      console.log("Collided.");
-      console.log(params.initial);
-      setTimeout((event) => {
+
+    const handX = handRef.current.x;
+    const handY = handRef.current.y;
+    const handWidth = handRef.current.width;
+    const handHeight = handRef.current.height;
+    const avatarX = avatarRef.current.x;
+    const avatarY = avatarRef.current.y;
+    const avatarWidth = avatarRef.current.offsetWidth;
+    const avatarHeight = avatarRef.current.offsetHeight;
+
+    if (!hitDetected) {
+
+      if (
+        // LogoPos.x > avatarRef.current.x - avatarRef.current.width - 50 &&
+        avatarX < handX + handWidth &&
+        avatarX + avatarWidth > handX &&
+        avatarY < handY + handHeight &&
+        avatarY + avatarHeight > handY
+      ) {
+
+
+        Colllision();
+        //console.log(score.state)
+
+        console.log("Collided.");
+
+
+        score.update();
+        // score.setupTarget()
+
+        // console.log("target", score.target)
+
+        setTimeout(() => {
+          setLastSpeed(0);
+          setHitDetected(false)
+          setLogoPos({ x: 0, y: 0 });
+        }, 3000);
+      } else {
+        console.log("No collided yet");
+        // startDate = new Date();
+
         setLogoPos({
-          x: (event.clientX = 0),
-          y: (event.clientY = 0),
-        });
 
-        setLastSpeed(0);
+          x: params.movement[0],
+          y: params.movement[1],
+        })
 
-        // lastSpeed.reset();
-        //3. Update Count.
+      }
 
-        //4. Reset hitDetected Flag
-        setHitDetected(true);
-      }, 3000);
-    } else {
-      console.log("No collided yet");
-      // startDate = new Date();
-      Colllision();
-      setLogoPos({
-        x: params.offset[0],
-        y: params.offset[1],
-      });
     }
+
   });
-  console.log("mov Function", mov());
 
-  // useEffect(() => {
-  //   setImagePosition({ x: avatarRef.current.x, y: avatarRef.current.y });
-  //   setImageDimensions({
-  //     width: avatarRef.current.width,
-  //     height: avatarRef.current.height,
-  //   });
 
-  //   // console.log(
-  //   //   "avatarWIdth",
-  //   //   avatarRef.current.width,
-  //   //   "avatarHeight",
-  //   //   avatarRef.current.height,
-  //   //   "avatarX",
-  //   //   avatarRef.current.x,
-  //   //   "avatarY",
-  //   //   avatarRef.current.y
-  //   // );
-  // }, []);
-
-  // function resetPage() {
-  //   /*Todos: */
-  //   //1. Set hands initial position.
-  //   //2. Reset Speed.
-
-  //   setLogoPos({ x: 0, y: 0 });
-  //   setLastSpeed(0);
-
-  //   // lastSpeed.reset();
-  //   //3. Update Count.
-
-  //   //4. Reset hitDetected Flag
-  //   setHitDetected(true);
-  // }
-
-  // const styles = useSpring({
-  //   loop: true,
-  //   from: { rotateZ: 0 },
-  //   to: { rotateZ: 180 },
-  // });
 
   function calculateSpeed() {
+    score.update()
     var a = LogoPos.x - avatarRef.current.x;
     var b = LogoPos.y - avatarRef.current.y;
 
@@ -151,9 +130,9 @@ function App() {
 
     let speed = c / (endDate.getTime() - startDate.getTime());
     setLastSpeed(speed.toFixed(2));
-    //console.log("speed", (speed / 300).toFixed(0));
+    console.log("speed", score.setTarget(speed));
 
-    console.log("Speed: ", speed);
+
   }
   // const collision = () => {
   //   if (targetRef.current.x + targetRef.current.width > refTarget.current.x) {
@@ -185,52 +164,30 @@ function App() {
   const handRef = useRef();
   startDate = new Date();
   // useLayoutEffect(() => {
+
   function Colllision() {
-    const handX = handRef.current.x;
-    const handY = handRef.current.y;
-    const handWidth = handRef.current.width;
-    const handHeight = handRef.current.height;
-    const avatarX = avatarRef.current.x;
-    const avatarY = avatarRef.current.y;
-    const avatarWidth = avatarRef.current.offsetWidth;
-    const avatarHeight = avatarRef.current.offsetHeight;
-    if (!hitDetected) {
-      if (
-        avatarX < handX + handWidth &&
-        avatarX + avatarWidth > handX &&
-        avatarY < handY + handHeight &&
-        avatarY + avatarHeight > handY
-      ) {
-        calculateSpeed();
-        // setLastSpeed(speed);
-        //dragging = false;
-        console.log("Collision Detected");
-        audio.play();
-        setHitDetected(true);
-        setCount(count + 1);
-        //setSelectedPerson({ image: selectedPerson.image });
-        // setTimeout(() => {
-        //   window.location.reload(false);
-        // }, 3000);
+    calculateSpeed();
+    // useDrag((params) => {
+    //   setLogoPos({
+    //     x: params.movement[0],
+    //     y: params.movement[1]
+    //   })
+    // })
 
-        // Wait for 3 seconds, Call ResetPage
-        //window.location.reload(false);
-      }
-    }
+    // setLastSpeed(speed);
+    //dragging = false;
+    console.log("Collision Detected");
+    audio.play();
+    setHitDetected(true);
 
-    console.log(
-      "handX",
-      handX,
-      "handY",
-      handY,
-      "handWidth",
-      handWidth,
-      "handHeight",
-      handHeight
-    );
+    // setTimeout(() => {
+    //   window.location.reload(false);
+    // }, 3000);
+
+    // Wait for 3 seconds, Call ResetPage
+    //window.location.reload(false);
   }
   // });
-
   return (
     <>
       <Container className="App" sx={{ height: 600 }}>
@@ -247,8 +204,11 @@ function App() {
               justifyContent: "space-around",
             }}
           > */}
-          <h1>{lastSpeed} Km/h</h1>
-          <h3>Score : {count} </h3>
+          <h1>
+            {lastSpeed} Km/h
+          </h1>
+          <h3>Score : {score.target.count} </h3>
+
           {/* </Box> */}
         </Container>
         {/* //<Speed /> */}
@@ -265,13 +225,8 @@ function App() {
             {...mov()}
             style={{
               position: "relative",
-              top: LogoPos.y,
               left: LogoPos.x,
-
-              borderStyle: "solid",
-              borderWidth: 2,
-              borderColor: "red",
-
+              top: LogoPos.y,
               width: 48,
               height: 48,
               zIndex: 1,
@@ -284,21 +239,17 @@ function App() {
               alt="logo"
               ref={handRef}
 
-              // onClick={start}
+            // onClick={start}
             />
           </animated.div>
           {/* <button onClick={start}>Play</button> */}
           <Box
             style={{
               width: 100,
-              height: 100,
-
-              borderStyle: "solid",
-              borderWidth: 2,
-              borderColor: "red",
+              height: 100
             }}
 
-            // onLayout={onLayout}
+          // onLayout={onLayout}
           >
             <img
               style={{
@@ -307,20 +258,17 @@ function App() {
               }}
               src={
                 hitDetected
-                  ? selectedPerson.afterHitAvatar
-                  : selectedPerson.image
+                  ? score.target.afterHitAvatar
+                  : score.target.image
               }
               className="App-logo2"
-              alt={selectedPerson.name}
+              alt={score.target.name}
               ref={avatarRef}
-              // ele={element}
+            // ele={element}
             />
-
-            {/* <RenderList /> */}
           </Box>
         </Container>
-        <SliderN setElement={setSelectedPerson} />
-        {/* <SliderImage /> */}
+        <SliderN />
       </Container>
     </>
   );

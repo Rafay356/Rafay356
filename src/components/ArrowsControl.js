@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Carousel } from "react-responsive-carousel";
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -8,24 +8,11 @@ import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 
 import { Details } from "./mock_data/name";
-// import { color } from "@mui/system";
-// const MyCollection = [
-//   {
-//     label: "First Picture",
-//     imgPath:
-//       "https://media.geeksforgeeks.org/wp-content/uploads/20210208000010/1.png",
-//   },
-//   {
-//     label: "Second Picture",
-//     imgPath:
-//       "https://media.geeksforgeeks.org/wp-content/uploads/20210208000009/2.png",
-//   },
-//   {
-//     label: "Third Picture",
-//     imgPath:
-//       "https://media.geeksforgeeks.org/wp-content/uploads/20210208000008/3.png",
-//   },
-// ];
+
+//Context API
+import NoteContext from "../context/context";
+
+
 
 const List = styled(Paper)(({ theme }) => ({
   display: "inlineGrid",
@@ -47,7 +34,10 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const SliderN = ({ setElement: setPerson }) => {
+const SliderN = () => {
+  const score = useContext(NoteContext);
+  //console.log(score)
+  // score.setupTarget()
   return (
     <Grid
       container
@@ -71,15 +61,15 @@ const SliderN = ({ setElement: setPerson }) => {
           width={150}
           useKeyboardArrows
           showStatus={false}
-          onChange={(index) => setPerson(Details[index])}
+          onChange={(index) => score.setTarget(Details[index])}
         >
           {Details.map((data, key) => {
             return (
-              <List key={key}>
+              <List key={key} style={{ marginLeft: 30 }}>
                 <div className="name" style={{ marginBottom: 2 }}>
                   {data.name}
                 </div>
-                <div>
+                <div >
                   <img src={data.image} style={{ width: 48 }} alt={data.name} />
                 </div>
               </List>

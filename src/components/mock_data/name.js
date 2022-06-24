@@ -4,7 +4,7 @@ export const Details = [
     name: "Shahbaz Sharief",
     image:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/CM_Punjab_Shehbaz_Sharif_%2835771008313%29_%28cropped%29.jpg/220px-CM_Punjab_Shehbaz_Sharif_%2835771008313%29_%28cropped%29.jpg",
-    afterHitAvatar: "../images/shahbaz_sharif_2.png",
+    afterHitAvatar: "/images/shahbaz_sharif_2.png",
     count: 0,
   },
   {
