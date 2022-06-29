@@ -1,15 +1,18 @@
 //React 
-import React, { useState, useRef, useContext } from "react";
-
+import React, { useState, useRef } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { actions } from "./store/ReduxMain"
 //CSS and animation
 import { Container, Box } from "@mui/system";
 import "./App.css";
 import { useDrag } from "react-use-gesture";
 import { animated } from "react-spring";
-import SliderN from "./components/ArrowsControl";
+import SliderN from "./components/SliderImage";
+//import { Details } from "./components/mock_data/ImageDetails"
+
 
 //Context API
-import NoteContext from "./context/context";
+//import NoteContext from "./context/context";
 
 //Speed Calculation variables
 var endDate;
@@ -17,32 +20,37 @@ var startDate;
 
 
 function App() {
+  const count = useSelector((state) => state.selectedPerson.count)
+  // console.log("Seklectedcount,", count)
+  const selectedPerson = useSelector((state) => state.selectedPerson);
+  // console.log("selectedPerson, ", selectedPerson);
+
+  // console.log("actions,", actions)
+  const dispatch = useDispatch()
+  // console.log("dispatch", dispatch)
+  const increment = () => {
+
+    dispatch(actions.increment())
+
+  }
+
+  const setPerson = (person) => {
+
+    dispatch(actions.setPerson(person))
+
+
+  }
+  // console.log("setPerson", setPerson)
+  //console.log("increment", increment)
+
+  // const person = { name: "Rafay", adress: { city: "Sialkot" } }
+  // const practise = { ...person, name: "Abdul", adress: { ...person.adress, city: "Islambad" } }
+  // console.log("person", person)
+  // console.log("practise", practise)
 
   //using Context to accesss Data 
-  const score = useContext(NoteContext);
-  // console.log(score.state.map((data) => { return Object.values(data.count) }))
-  // const num = (index) => {
-  //   // score.setTarget(score.state[index])
-  //   console.log(index)
-  // }
+  // const score = useContext(NoteContext);
 
-  // const num = score.state.map((data, index) => {
-  //   // return data.count
-  //   console.log("index", data.count[index])
-  // })
-  //console.log(score.state[0].count)
-
-
-
-  // const [selectedPerson, setSelectedPerson] = useState({
-  //   name: "Shahbaz Sharief",
-  //   image:
-  //     "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/CM_Punjab_Shehbaz_Sharif_%2835771008313%29_%28cropped%29.jpg/220px-CM_Punjab_Shehbaz_Sharif_%2835771008313%29_%28cropped%29.jpg",
-  //   afterHitAvatar: "./images/shahbaz_sharif_2.png",
-  // });
-
-
-  //const [count, setCount] = useState(0);
   const [LogoPos, setLogoPos] = useState({ x: 0, y: 0 });
 
   //const [imagePosition, setImagePosition] = useState({ x: 0, y: 0 });
@@ -69,7 +77,7 @@ function App() {
     if (!hitDetected) {
 
       if (
-        // LogoPos.x > avatarRef.current.x - avatarRef.current.width - 50 &&
+
         avatarX < handX + handWidth &&
         avatarX + avatarWidth > handX &&
         avatarY < handY + handHeight &&
@@ -78,15 +86,8 @@ function App() {
 
 
         Colllision();
-        //console.log(score.state)
 
         console.log("Collided.");
-
-
-        score.update();
-        // score.setupTarget()
-
-        // console.log("target", score.target)
 
         setTimeout(() => {
           setLastSpeed(0);
@@ -112,7 +113,8 @@ function App() {
 
 
   function calculateSpeed() {
-    score.update()
+
+
     var a = LogoPos.x - avatarRef.current.x;
     var b = LogoPos.y - avatarRef.current.y;
 
@@ -126,11 +128,12 @@ function App() {
 
     console.log("Distance: ", c);
 
-    console.log("TIME DIFF: ", endDate.getTime() - startDate.getTime() / 1000);
-
-    let speed = c / (endDate.getTime() - startDate.getTime());
+    console.log("TIME DIFF: ", endDate.getTime() - startDate.getTime());
+    console.log(endDate.getTime(), "endDate of the objectS, ", "start date of the obkect", startDate.getTime())
+    const timeDiff = endDate.getTime() - startDate.getTime()
+    let speed = c / timeDiff
     setLastSpeed(speed.toFixed(2));
-    console.log("speed", score.setTarget(speed));
+    console.log("speed");
 
 
   }
@@ -145,47 +148,19 @@ function App() {
 
   const audio = new Audio("./audio/slap.mp3");
 
-  // const start = () => {
-  //   audio.play();
-  // };
 
-  // const [Image, setImage] = useState({ image: "./images/handFinal.png" });
-  // function handleImage() {
-  //   setImage({
-  //     Image: " ./images/hand2Final.png",
-  //   });
-  // }
-  // const onLayout = (event) => {
-  //   console.log("Layout");
-  //   const { x, y, height, width } = event;
-  //   console.log("Dimensions of contatiner vieew: ", x, y, height, width);
-  // };
   const avatarRef = useRef();
   const handRef = useRef();
   startDate = new Date();
   // useLayoutEffect(() => {
 
   function Colllision() {
+    setHitDetected(true);
     calculateSpeed();
-    // useDrag((params) => {
-    //   setLogoPos({
-    //     x: params.movement[0],
-    //     y: params.movement[1]
-    //   })
-    // })
-
-    // setLastSpeed(speed);
-    //dragging = false;
+    increment()
     console.log("Collision Detected");
     audio.play();
-    setHitDetected(true);
 
-    // setTimeout(() => {
-    //   window.location.reload(false);
-    // }, 3000);
-
-    // Wait for 3 seconds, Call ResetPage
-    //window.location.reload(false);
   }
   // });
   return (
@@ -197,17 +172,10 @@ function App() {
             justifyContent: "space-around",
           }}
         >
-          {/* <Box
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-around",
-            }}
-          > */}
           <h1>
             {lastSpeed} Km/h
           </h1>
-          <h3>Score : {score.target.count} </h3>
+          <h3>Score : {count} </h3>
 
           {/* </Box> */}
         </Container>
@@ -258,17 +226,17 @@ function App() {
               }}
               src={
                 hitDetected
-                  ? score.target.afterHitAvatar
-                  : score.target.image
+                  ? selectedPerson.afterHitAvatar
+                  : selectedPerson.image
               }
               className="App-logo2"
-              alt={score.target.name}
+              alt={selectedPerson.name}
               ref={avatarRef}
             // ele={element}
             />
           </Box>
         </Container>
-        <SliderN />
+        <SliderN onChange={setPerson} />
       </Container>
     </>
   );

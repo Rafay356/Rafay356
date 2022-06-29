@@ -1,5 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Carousel } from "react-responsive-carousel";
+import { useSelector } from 'react-redux';
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
@@ -7,10 +8,10 @@ import { Paper } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 
-import { Details } from "./mock_data/name";
+// import { Details } from "./mock_data/ImageDetails";
 
 //Context API
-import NoteContext from "../context/context";
+// import NoteContext from "../context/context";
 
 
 
@@ -34,10 +35,13 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const SliderN = () => {
-  const score = useContext(NoteContext);
-  //console.log(score)
-  // score.setupTarget()
+const SliderN = (props) => {
+
+  // const score = useContext(NoteContext);
+  //const selectedPerson = useSelector((state) => state.selectedPerson);
+  const allPersons = useSelector((state) => state.allPersons);
+
+
   return (
     <Grid
       container
@@ -61,9 +65,11 @@ const SliderN = () => {
           width={150}
           useKeyboardArrows
           showStatus={false}
-          onChange={(index) => score.setTarget(Details[index])}
+          // onChange={(index) => score.setTarget(Details[index])}
+          onChange={(index) => props.onChange(allPersons[index])}
         >
-          {Details.map((data, key) => {
+          {allPersons.map((data, key) => {
+
             return (
               <List key={key} style={{ marginLeft: 30 }}>
                 <div className="name" style={{ marginBottom: 2 }}>

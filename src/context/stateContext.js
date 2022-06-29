@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import NoteContext from "./context";
 //import { Details } from "../components/mock_data/name"
+//import { useSelector, useDispatch } from 'react-redux';
 const NoteState = (props) => {
 
 
@@ -13,16 +14,18 @@ const NoteState = (props) => {
         maxSpeed: 0
     });
 
-    // console.log(target)
+    //console.log(target)
 
     const update = () => {
+
         setTarget({ ...target, count: target.count + 1 })
         //console.log(...state)
 
     }
 
+
     return (
-        <NoteContext.Provider value={{ setTarget, update, target }}>{props.children}</NoteContext.Provider>
+        <NoteContext.Provider value={{ update, target, setTarget }}>{props.children}</NoteContext.Provider>
     );
 };
 
