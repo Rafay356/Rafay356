@@ -1,4 +1,9 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit"
+import storage from 'redux-persist/lib/storage';
+import { persistReducer, persistStore } from 'redux-persist';
+import thunk from 'redux-thunk';
+
+
 
 
 const counterSlice = createSlice({
@@ -17,21 +22,24 @@ const counterSlice = createSlice({
                 id: "1",
                 name: "Asif Ali Zardari",
                 image:
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Asif_Ali_Zardari_with_Obamas_%28cropped%29.jpg/220px-Asif_Ali_Zardari_with_Obamas_%28cropped%29.jpg",
+                    "/images/Asif1.jpg",
+                afterHitAvatar: "/images/Asif.jpg",
                 count: 0,
             },
             {
                 id: "2",
                 name: "Nawaz Sharief",
                 image:
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/PrimeMinisterNawazSharif.jpg/220px-PrimeMinisterNawazSharif.jpg",
+                    "/images/Nawaz_Sharif2.jpg",
+                afterHitAvatar: "/images/Nawaz_Sharif1.jpg",
                 count: 0,
             },
             {
                 id: "3",
                 name: "Imran Khan",
                 image:
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Imran_Ahmed_Khan_Niazi_-_UNGA_%2848784380531%29_%28cropped%29.jpg/220px-Imran_Ahmed_Khan_Niazi_-_UNGA_%2848784380531%29_%28cropped%29.jpg",
+                    "/images/ImranKhan2.jpg",
+                afterHitAvatar: "/images/ImranKhan.jpg",
                 count: 0,
             },
         ],
@@ -71,21 +79,29 @@ const counterSlice = createSlice({
             }
 
         },
-        setPerson(state, action) {
-            console.log("Data, ", action.payload)
-            return { ...state, selectedPerson: action.payload }
 
+        setPerson(state, action) {
+            return { ...state, selectedPerson: action.payload }
             // ...state,
             //     selectedPerson: action.payload
         }
     },
-
-
 })
+
+const persistConfig = {
+    key: 'root',
+    storage,
+}
+
+
+//const persistedReducer = persistReducer(persistConfig, counterSlice.reducer)
+
+
 export const actions = counterSlice.actions
 const store = configureStore({
-    reducer: counterSlice.reducer
+    reducer: counterSlice.reducer,
+    middleware: [thunk]
 })
 
-
-export default store
+export const persistor = persistStore(store)
+export { store }

@@ -1,5 +1,5 @@
 //React 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { actions } from "./store/ReduxMain"
 //CSS and animation
@@ -20,9 +20,19 @@ var startDate;
 
 
 function App() {
+
+  const playStartingAudio = () => {
+
+  }
+
+  useEffect(() => {
+    playStartingAudio();
+  }, []);
+
   const count = useSelector((state) => state.selectedPerson.count)
   // console.log("Seklectedcount,", count)
   const selectedPerson = useSelector((state) => state.selectedPerson);
+  const allPersons = useSelector((state) => state.allPersons);
   // console.log("selectedPerson, ", selectedPerson);
 
   // console.log("actions,", actions)
@@ -37,8 +47,6 @@ function App() {
   const setPerson = (person) => {
 
     dispatch(actions.setPerson(person))
-
-
   }
   // console.log("setPerson", setPerson)
   //console.log("increment", increment)
@@ -223,6 +231,7 @@ function App() {
               style={{
                 width: "100%",
                 height: "100%",
+                borderRadius: "20%"
               }}
               src={
                 hitDetected
