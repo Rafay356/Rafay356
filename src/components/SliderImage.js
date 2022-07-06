@@ -35,66 +35,99 @@ const Container = styled("div")(({ theme }) => ({
   width: "400px",
 
 }));
-function Arrow(props) {
-  let className = props.type === "next" ? "nextArrow" : "prevArrow";
+function NextArrow(props) {
 
-  const char = props.type === "next" ? "👉" : "👈";
+  const { className, style, onClick } = props;
   return (
-    <span className={className} onClick={props.onClick}>
-      {char}
-    </span>
+    <div
+      className={className}
+      style={{ ...style }}
+      onClick={onClick}
+    />
   );
-
 }
 
+function PrevArrow(props) {
+
+  const style = {
+    // backgroundColor: 'black',
+
+  }
+  const { className, onClick } = props;
+  return (
+    <div
+      className={className}
+      style={style}
+      onClick={onClick}
+    />
+  );
+}
+// function Arrow(props) {
+//   let className = props.type === "next" ? "nextArrow" : "prevArrow";
+
+//   const char = props.type === "next" ? "👉" : "👈";
+//   return (
+//     <span className={className} onClick={props.onClick} >
+//       {char}
+//     </span>
+//   );
+
+// }
+
 const SliderN = (props) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
   // const score = useContext(NoteContext);
   //const selectedPerson = useSelector((state) => state.selectedPerson);
   const allPersons = useSelector((state) => state.allPersons);
 
   const settings = {
 
-    customPaging: function (i) {
-      return (
-        <a>
-          <img src={`${allPersons.image}.jpg`} />
-        </a>
-      );
-    },
+    // customPaging: function (i) {
+
+    //   return (
+
+    //     <img src={`${allPersons.image}/images.jpg`} />
+
+
+    //   );
+    // },
+
     dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
+    focusOnSelect: true,
+    adaptiveHeight: true,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
     beforeChange: (current, next) => props.onChange(allPersons[next]),
     // onChange={(index) => props.onChange(allPersons[index])}
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          infinite: true,
-          dots: true
-        }
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2
-        }
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }
-    ]
+    // responsive: [
+    //   // {
+    //   //   breakpoint: 1024,
+    //   //   settings: {
+    //   //     slidesToShow: 3,
+    //   //     slidesToScroll: 1,
+    //   //     infinite: true,
+    //   //     dots: true
+    //   //   }
+    //   // },
+    //   // {
+    //   //   breakpoint: 600,
+    //   //   settings: {
+    //   //     slidesToShow: 3,
+    //   //     slidesToScroll: 3,
+    //   //     initialSlide: 3
+    //   //   }
+    //   // },
+    //   // {
+    //   //   breakpoint: 480,
+    //   //   settings: {
+    //   //     slidesToShow: 3,
+    //   //     slidesToScroll: 3
+    //   //   }
+    //   // }
+    // ]
 
 
 
@@ -114,14 +147,13 @@ const SliderN = (props) => {
     <Container>
 
       <Slider {...settings}
-        nextArrow={<Arrow type="next" />}
-        prevArrow={<Arrow type="prev" />}
+        // nextArrow={<Arrow type="NextArrow" />}
 
 
         // onChange={(index) => props.onChange(allPersons[index])}
 
         style={{
-          display: "flex", jsutifyContent: "center", alignItems: "center"
+          display: "flex", jsutifyContent: "center", alignItems: "center",
         }}
       // variant="dark"
       // showThumbs={false}
@@ -144,7 +176,7 @@ const SliderN = (props) => {
                 {/* <div className="name" style={{ width: 120 }} >
                   {data.name}
                 </div> */}
-                <div style={{ marginRight: '12px', display: 'flex', justifyContent: 'center', alightItems: 'center', }}>
+                <div style={{ marginLeft: '12px', marginRight: '12px', display: 'flex', justifyContent: 'center', alightItems: 'center' }}>
                   <img src={data.image} style={{ width: "100%", height: '100%', borderRadius: "20px" }} alt={data.name} />
                 </div>
               </Item>

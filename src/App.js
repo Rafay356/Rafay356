@@ -21,17 +21,20 @@ var startDate;
 
 function App() {
 
-  const playStartingAudio = () => {
+  // const playStartingAudio = () => {
+  //   const audio = new Audio("./audio/cartoon-jump.mp3");
+  //   audio.play()
 
-  }
+  // }
 
-  useEffect(() => {
-    playStartingAudio();
-  }, []);
+  // useEffect(() => {
+  //   playStartingAudio()
+  // }, []);
 
   const count = useSelector((state) => state.selectedPerson.count)
-  // console.log("Seklectedcount,", count)
+
   const selectedPerson = useSelector((state) => state.selectedPerson);
+
   const allPersons = useSelector((state) => state.allPersons);
   // console.log("selectedPerson, ", selectedPerson);
 
@@ -71,7 +74,9 @@ function App() {
   const [lastSpeed, setLastSpeed] = useState(0);
   const [hitDetected, setHitDetected] = useState(false);
 
+
   const mov = useDrag((params) => {
+
 
     const handX = handRef.current.x;
     const handY = handRef.current.y;
@@ -82,51 +87,48 @@ function App() {
     const avatarWidth = avatarRef.current.offsetWidth;
     const avatarHeight = avatarRef.current.offsetHeight;
 
-    if (!hitDetected) {
 
-      if (
+    if (
 
-        avatarX < handX + handWidth &&
-        avatarX + avatarWidth > handX &&
-        avatarY < handY + handHeight &&
-        avatarY + avatarHeight > handY
-      ) {
+      avatarX < handX + handWidth &&
+      avatarX + avatarWidth > handX &&
+      avatarY < handY + handHeight &&
+      avatarY + avatarHeight > handY && !hitDetected
+    ) {
 
 
-        Colllision();
+      Colllision();
 
-        console.log("Collided.");
+      console.log("Collided.");
 
-        setTimeout(() => {
-          setLastSpeed(0);
-          setHitDetected(false)
-          setLogoPos({ x: 0, y: 0 });
-        }, 3000);
-      } else {
-        console.log("No collided yet");
-        // startDate = new Date();
+      setTimeout(() => {
+        setLastSpeed(0);
+        setHitDetected(false)
+        setLogoPos({ x: 0, y: 0 });
+      }, 2000);
+    } else {
+      console.log("No collided yet");
+      // startDate = new Date();
 
-        setLogoPos({
+      setLogoPos({
 
-          x: params.movement[0],
-          y: params.movement[1],
-        })
-
-      }
+        x: params.movement[0],
+        y: params.movement[1],
+      })
 
     }
 
   });
 
-
+  // console.log("props of App", props.params)
 
   function calculateSpeed() {
-
 
     var a = LogoPos.x - avatarRef.current.x;
     var b = LogoPos.y - avatarRef.current.y;
 
     endDate = new Date();
+
 
     console.log("X1: ", LogoPos.x, "X2: ", avatarRef.current.x);
 

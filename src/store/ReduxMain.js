@@ -94,7 +94,7 @@ const persistConfig = {
 }
 
 
-//const persistedReducer = persistReducer(persistConfig, counterSlice.reducer)
+// const persistedReducer = persistReducer(persistConfig, counterSlice.reducer)
 
 
 export const actions = counterSlice.actions
