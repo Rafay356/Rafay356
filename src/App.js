@@ -1,12 +1,13 @@
 //React 
 import React, { useState, useRef, useEffect } from "react";
+
 import { useSelector, useDispatch } from 'react-redux';
 import { actions } from "./store/ReduxMain"
 //CSS and animation
 import { Container, Box } from "@mui/system";
 import "./App.css";
 import { useDrag } from "react-use-gesture";
-import { animated } from "react-spring";
+import { animated, useSpring } from "react-spring";
 import SliderN from "./components/SliderImage";
 //import { Details } from "./components/mock_data/ImageDetails"
 
@@ -36,11 +37,9 @@ function App() {
   const selectedPerson = useSelector((state) => state.selectedPerson);
 
   const allPersons = useSelector((state) => state.allPersons);
-  // console.log("selectedPerson, ", selectedPerson);
 
-  // console.log("actions,", actions)
   const dispatch = useDispatch()
-  // console.log("dispatch", dispatch)
+
   const increment = () => {
 
     dispatch(actions.increment())
@@ -75,6 +74,14 @@ function App() {
   const [hitDetected, setHitDetected] = useState(false);
 
 
+  const style1 = useSpring({
+    from: { marginTop: 100 },
+    to: { marginTop: 0 },
+    config: { duration: 500 }
+
+  })
+
+
   const mov = useDrag((params) => {
 
 
@@ -86,39 +93,44 @@ function App() {
     const avatarY = avatarRef.current.y;
     const avatarWidth = avatarRef.current.offsetWidth;
     const avatarHeight = avatarRef.current.offsetHeight;
+    if (!hitDetected) {
 
 
-    if (
+      if (
 
-      avatarX < handX + handWidth &&
-      avatarX + avatarWidth > handX &&
-      avatarY < handY + handHeight &&
-      avatarY + avatarHeight > handY && !hitDetected
-    ) {
+        avatarX < handX + handWidth &&
+        avatarX + avatarWidth > handX &&
+        avatarY < handY + handHeight &&
+        avatarY + avatarHeight > handY
+      ) {
+        // setHitDetected(true)
 
+        Colllision();
 
-      Colllision();
+        console.log("Collided.");
 
-      console.log("Collided.");
+        setTimeout(() => {
+          setHitDetected(false)
+          setLastSpeed(0);
+          setLogoPos({ x: 0, y: 0 });
+        }, 2000);
+      } else {
 
-      setTimeout(() => {
-        setLastSpeed(0);
-        setHitDetected(false)
-        setLogoPos({ x: 0, y: 0 });
-      }, 2000);
+        console.log("No collided yet");
+        // startDate = new Date();
+
+        setLogoPos({
+
+          x: params.movement[0],
+          y: params.movement[1],
+        })
+
+      }
     } else {
-      console.log("No collided yet");
-      // startDate = new Date();
-
-      setLogoPos({
-
-        x: params.movement[0],
-        y: params.movement[1],
-      })
-
+      setHitDetected(true)
     }
-
   });
+
 
   // console.log("props of App", props.params)
 
@@ -139,7 +151,7 @@ function App() {
     console.log("Distance: ", c);
 
     console.log("TIME DIFF: ", endDate.getTime() - startDate.getTime());
-    console.log(endDate.getTime(), "endDate of the objectS, ", "start date of the obkect", startDate.getTime())
+    console.log(endDate.getTime(), "endDate of the objectS, ", "start date of the object", startDate.getTime())
     const timeDiff = endDate.getTime() - startDate.getTime()
     let speed = c / timeDiff
     setLastSpeed(speed.toFixed(2));
@@ -162,7 +174,6 @@ function App() {
   const avatarRef = useRef();
   const handRef = useRef();
   startDate = new Date();
-  // useLayoutEffect(() => {
 
   function Colllision() {
     setHitDetected(true);
@@ -182,9 +193,11 @@ function App() {
             justifyContent: "space-around",
           }}
         >
-          <h1>
-            {lastSpeed} Km/h
-          </h1>
+          <animated.div style={style1}>
+            <h1>
+              {lastSpeed} Km/h
+            </h1>
+          </animated.div>
           <h3>Score : {count} </h3>
 
           {/* </Box> */}
@@ -209,6 +222,7 @@ function App() {
               height: 48,
               zIndex: 1,
             }}
+
           >
             <img
               style={{ width: "100%", height: "100%" }}
